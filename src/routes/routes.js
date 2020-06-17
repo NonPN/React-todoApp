@@ -22,7 +22,7 @@ const routes = [
         exact: true,
         component: Todo,
         canAccess: true
-    }
+    },
 ]
 
 export default () => (

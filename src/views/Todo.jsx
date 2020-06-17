@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import { endpoint } from '../api'
@@ -47,7 +47,18 @@ const Btn = styled.button`
 const Todo = props => {
     const [title, setTitle] = useState('')
     const [des, setDes] = useState('')
+    const [status, setStatus] = useState(0)
     const [redirect, setRedirect] = useState(false)
+
+    useEffect(() => {
+        if (props.todo) {
+            console.log(props.todo);
+            setTitle(props.todo.title)
+            setDes(props.todo.description)
+            setStatus(1)
+        }
+
+    }, [])
 
     const renderHome = () => {
         return redirect ? <Redirect to={{
@@ -77,22 +88,34 @@ const Todo = props => {
 
     }
 
+    const editTodo = async () => {
+        let status = await endpoint.put("/todos/" + props.todo._id, {
+            title: title,
+            description: des,
+        }, {
+            headers: {
+                'Authorization': 'Bearer ' + props.location.token
+            }
+        })
+        if (status) setRedirect(true)
+    }
+
     return (
         <Container>
             {renderHome()}
             <FormGroup>
                 <Form>
                     <Label>TITLE</Label>
-                    <TextArea onChange={handleTitleChange}></TextArea>
+                    <TextArea value={title} onChange={handleTitleChange}></TextArea>
                 </Form>
                 <Form>
                     <Label>DESCRIPTION</Label>
-                    <TextArea onChange={handleDesChange}></TextArea>
+                    <TextArea value={des} onChange={handleDesChange}></TextArea>
                 </Form>
             </FormGroup>
             <BtnLine>
                 <Btn onClick={() => { setRedirect(true) }}>Cancel</Btn>
-                <Btn onClick={createTodo}>Create</Btn>
+                {status == 0 ? <Btn onClick={createTodo}>Create</Btn> : <Btn onClick={editTodo}>Edit</Btn>}
             </BtnLine>
         </Container>
     )

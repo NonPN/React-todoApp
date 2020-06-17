@@ -29,13 +29,19 @@ const Btn = styled.button`
 const Home = props => {
     const [token, setToken] = useState()
     const [todos, setTodos] = useState([])
+    const [todo, setTodo] = useState()
     const [redirect, setRedirect] = useState(false)
-    const [state, setState] = useState(0)
 
     useEffect(() => {
         setToken(props.location.token)
         fetchData(props.location.token)
     }, [])
+
+    // useEffect(() => {
+    //     if (todo) {
+    //         setRedirect(true)
+    //     }
+    // }, [todo])
 
     const fetchData = async (t) => {
         let res = await endpoint.get("/todos/", {
@@ -57,14 +63,13 @@ const Home = props => {
     const renderTodoPage = () => {
         return redirect ? <Redirect to={{
             pathname: "/todo",
-            state: state,
+            todo: todo,
             token: token
         }} /> : <></>
     }
 
-    const editCard = () => {
-        setState(1)
-        setRedirect(true)
+    const editCard = (todo) => {
+        setTodo(todo)
     }
 
     return (
@@ -72,7 +77,7 @@ const Home = props => {
             <Content>
                 {renderTodos()}
             </Content>
-            <Btn onClick={() => { setState(0); setRedirect(true) }}>+ Create</Btn>
+            <Btn onClick={() => { setRedirect(true) }}>+ Create</Btn>
             {renderTodoPage()}
         </Container>
     )

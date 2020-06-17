@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
 import { endpoint } from '../api'
 import styled from 'styled-components'
 
@@ -13,6 +14,7 @@ const Container = styled.div`
     justify-content: space-between;
 `
 const Content = styled.div`
+    margin-left: 20px;
 `
 
 const Delete = styled.button`
@@ -37,6 +39,10 @@ const TodoCard = props => {
         setDes(props.todo.description)
     })
 
+    const editTodo = () => {
+        props.editCard(props.todo)
+    }
+
     const deleteTodo = () => {
         endpoint.delete("/todos/" + props.todo._id, {
             headers: {
@@ -48,7 +54,7 @@ const TodoCard = props => {
     }
 
     return (
-        <Container>
+        <Container onClick={editTodo}>
             <Content>
                 <Title>{title}</Title>
                 <Des>{des}</Des>
