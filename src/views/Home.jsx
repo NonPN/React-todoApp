@@ -34,9 +34,7 @@ const Home = props => {
 
     useEffect(() => {
         setToken(props.location.token)
-        let data = fetchData(props.location.token)
-        if (data) console.log(data);
-
+        fetchData(props.location.token)
     }, [])
 
     const fetchData = async (t) => {
@@ -45,13 +43,13 @@ const Home = props => {
                 'Authorization': 'Bearer ' + t
             }
         })
-        return res.data
+        if (res) setTodos(res.data)
     }
 
     const renderTodos = () => {
         return (
             todos.map((todo, i) =>
-                <TodoCard todo={todo} editCard={editCard} token={token} key={i} />
+                <TodoCard todo={todo} editCard={editCard} token={token} fetchData={fetchData} key={i} />
             )
         )
     }
@@ -72,6 +70,7 @@ const Home = props => {
     return (
         <Container>
             <Content>
+                {renderTodos()}
             </Content>
             <Btn onClick={() => { setState(0); setRedirect(true) }}>+ Create</Btn>
             {renderTodoPage()}

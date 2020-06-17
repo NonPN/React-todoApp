@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react'
+import { endpoint } from '../api'
 import styled from 'styled-components'
 
 const Container = styled.div`
-    border-width: 1px;
-    width: 60%;
+    border-bottom: 1px solid;
+    width: auto;
     height: 20%;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
 `
+const Content = styled.div`
+`
+
 const Delete = styled.button`
-    border-radius: 1000px;
+    float: right;
+    width: auto;
+    height: auto;
+    background-color: red;
+`
+const Title = styled.h2`
+
+`
+const Des = styled.p`
+
 `
 
 const TodoCard = props => {
@@ -19,9 +37,23 @@ const TodoCard = props => {
         setDes(props.todo.description)
     })
 
+    const deleteTodo = () => {
+        endpoint.delete("/todos/" + props.todo._id, {
+            headers: {
+                'Authorization': 'Bearer ' + props.token
+            }
+        }).then(() => {
+            props.fetchData(props.token)
+        })
+    }
+
     return (
         <Container>
-            <p>test</p>
+            <Content>
+                <Title>{title}</Title>
+                <Des>{des}</Des>
+            </Content>
+            <Delete onClick={deleteTodo}>X</Delete>
         </Container>
     )
 }

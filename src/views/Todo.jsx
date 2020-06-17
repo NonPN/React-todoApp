@@ -50,7 +50,10 @@ const Todo = props => {
     const [redirect, setRedirect] = useState(false)
 
     const renderHome = () => {
-        return redirect ? <Redirect to="/home" /> : <></>
+        return redirect ? <Redirect to={{
+            pathname: "/home",
+            token: props.location.token
+        }} /> : <></>
     }
 
     const handleTitleChange = (event) => {
@@ -71,7 +74,6 @@ const Todo = props => {
             }
         })
         if (status) setRedirect(true)
-        console.log(props.location.token);
 
     }
 
